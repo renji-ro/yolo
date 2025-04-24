@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from "react";
 import { TeamMember, Ticket, TicketStatus } from "../types";
 import { dataProvider } from "../api/dataProvider";
 
@@ -10,7 +10,7 @@ type TicketContextType = {
   addTicket: (ticket: Omit<Ticket, "id" | "createdAt">) => void;
   updateTicket: (id: number, updates: Partial<Ticket>) => void;
   deleteTicket: (id: number) => void;
-  setFilter: (filter: TicketStatus | "all") => void;
+  setFilter: Dispatch<SetStateAction<TicketStatus | "all">>;
 };
 
 const TicketContext = createContext<TicketContextType | undefined>(undefined);
@@ -96,10 +96,6 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const setFilter = (filter: TicketStatus | "all") => {
-    setCurrentFilter(filter);
-  };
-
   return (
     <TicketContext.Provider
       value={{
@@ -110,7 +106,7 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
         addTicket,
         updateTicket,
         deleteTicket,
-        setFilter,
+        setFilter: setCurrentFilter,
       }}
     >
       {children}
